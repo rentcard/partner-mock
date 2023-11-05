@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import { getAccessToken } from './authClient';
+import { exchangeAuthCode, getAccessToken } from './authClient';
 import { createPreUser } from './createPreUser';
 import { createRedirectURL } from './createRedirectURL';
 
@@ -19,35 +19,31 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
   // get the user object from the request
   const queryuser = req.query.user;
-  var user = "";
   if (!queryuser) {
-    res.status(400).send('User is missing');
+    return res.status(400).send('User is missing');
   }
-  else if (typeof queryuser !== 'string') {
-    res.status(400).send('User is not a string');
+  if (typeof queryuser !== 'string') {
+    return res.status(400).send('User is not a string');
   }
-  else {
-    user = queryuser as string;
-  }
+  
+  const user = String(queryuser);  
 
   if(user !== "") {
     try {
       // Step 1: Get the access token
-      /* const accessToken = await getAccessToken();
+      const accessToken = await getAccessToken();
       var preUserOneTimeToken = "";
-
       // Step 2: POST preUser using the accessToken
       if (accessToken && accessToken.access_token && typeof accessToken.access_token === 'string') {
         preUserOneTimeToken = await createPreUser(accessToken.access_token);
       }    
       else {
         throw new Error('Failed to retrieve access token');
-      } */
-      const preUserOneTimeToken = "1234567890";
-
+      }
       // Step 3: Redirect user back to rentcard
       if (preUserOneTimeToken){
         const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
+        console.log(redirectUrl);
         res.redirect(redirectUrl);
       }
       else {
@@ -64,6 +60,25 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
   else {
     res.status(400).send('User is missing or malformatted');
   }
+});
+
+app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
+  // get the user object from the request
+  const authorization_code = req.query.authorization_code;
+  const redirectUrl = req.query.redirect_url as string || "";
+
+  if (authorization_code &&  typeof authorization_code === 'string') {  
+    const accessToken = await exchangeAuthCode(authorization_code as string);
+    // Do the call to the RC backend here
+    // Then show something for a few seconds before redirecting
+    console.log('The resulting token: ', accessToken);
+    res.redirect(redirectUrl);
+
+  }    
+  else {
+    throw new Error('Failed to retrieve access token');
+  }
+  
 });
 
 app.listen(port, () => {
