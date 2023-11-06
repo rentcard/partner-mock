@@ -7,7 +7,7 @@
 export async function createRedirectURL(preUserOneTimeToken: string, user: string) {
   const state = encodeURIComponent(JSON.stringify({
     successRedirectUrl: "customer-subdomain.somepartner.co/candidates/public/success-page",
-    redirectUrl: "app.somepartner.co/app/auth/rentcard/callback", callbackUrl:"http://localhost:4200/"
+    redirectUrl: "http://localhost:3001/app/auth/rentcard/callback", callbackUrl:"http://localhost:4200/"
   }));
 
   const redirectUrl = encodeURIComponent(`http://localhost:4200/registration?PreUserOneTimeToken=${preUserOneTimeToken}&user=${user}`);

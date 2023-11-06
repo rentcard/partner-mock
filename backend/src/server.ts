@@ -65,6 +65,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   // get the user object from the request
   const authorization_code = req.query.authorization_code;
+  console.log("authorization_code:", authorization_code);
   const redirectUrl = req.query.redirect_url as string || "";
 
   if (authorization_code &&  typeof authorization_code === 'string') {  
