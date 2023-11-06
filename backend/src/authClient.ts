@@ -31,12 +31,13 @@ export async function getAccessToken() {
       console.error('Access Token error:', error);
       }
     else {
-      throw new Error('Failed to retrieve access token');
+      throw new Error('Failed to retrieve access token 1');
     }
   }
 }
 
 export async function exchangeAuthCode(authorization_code: string) {
+  console.log("I am in exchangeAuthCode");
   const config = {
     client: {
       id: process.env.CLIENT_ID as string,
@@ -46,9 +47,6 @@ export async function exchangeAuthCode(authorization_code: string) {
       tokenHost: 'https://auth.development.rentcard.app',
       tokenPath: '/api/v1/oauth2'
     },
-    options: {
-      authorizationMethod: "body" as "body"
-    }
   };
   
   const client = new AuthorizationCode(config);
@@ -57,6 +55,7 @@ export async function exchangeAuthCode(authorization_code: string) {
     redirect_uri: 'http://localhost:4200/registration',
   };
   try {
+    console.log("Trying to get token 123");
     const accessToken = await client.getToken(tokenParams);
     console.log('The resulting token: ', accessToken);
     return accessToken;
@@ -65,7 +64,7 @@ export async function exchangeAuthCode(authorization_code: string) {
       console.error('Access Token error:', error);
       }
     else {
-      throw new Error('Failed to retrieve access token');
+      throw new Error('Failed to retrieve access token 2');
     }
   }
 }

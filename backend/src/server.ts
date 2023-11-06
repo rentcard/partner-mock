@@ -38,7 +38,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
         preUserOneTimeToken = await createPreUser(accessToken.access_token);
       }    
       else {
-        throw new Error('Failed to retrieve access token');
+        throw new Error('Failed to retrieve access token 3');
       }
       // Step 3: Redirect user back to rentcard
       if (preUserOneTimeToken){
@@ -65,9 +65,11 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   // get the user object from the request
   const authorization_code = req.query.authorization_code;
-  const redirectUrl = req.query.redirect_url as string || "";
-
+  console.log("req query:", req)
+  const redirectUrl = req.query.finalRedirectUrl as string || "https://www.google.com";
+  console.log("redirectUrl: ",redirectUrl)
   if (authorization_code &&  typeof authorization_code === 'string') {  
+    console.log("starting with exchangeAuthCode");
     const accessToken = await exchangeAuthCode(authorization_code as string);
     // Do the call to the RC backend here
     // Then show something for a few seconds before redirecting
@@ -76,7 +78,7 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
 
   }    
   else {
-    throw new Error('Failed to retrieve access token');
+    throw new Error('Failed to retrieve access token 4');
   }
   
 });
