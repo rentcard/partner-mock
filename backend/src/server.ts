@@ -5,12 +5,19 @@ import dotenv from 'dotenv';
 import { exchangeAuthCode, getAccessToken } from './authClient';
 import { createPreUser } from './createPreUser';
 import { createRedirectURL } from './createRedirectURL';
+import { getApplicantData } from './getApplicantData';
 
 dotenv.config();
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 const port = 3001;
+
+interface storedData {[key: string]:string;}; 
+const storedData: storedData = {}; // This is just for demo purposes, would obviously be a database in production
+
+const applId = "1234567"; // This is the same applicantId as passed in the frontend
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Backend is up and running!');
@@ -38,7 +45,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
         preUserOneTimeToken = await createPreUser(accessToken.access_token);
       }    
       else {
-        throw new Error('Failed to retrieve access token 3');
+        throw new Error('Failed to retrieve access token');
       }
       // Step 3: Redirect user back to rentcard
       if (preUserOneTimeToken){
@@ -63,25 +70,32 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 });
 
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
-  // get the user object from the request
-  const authorization_code = req.query.authorization_code;
-  console.log("req query:", req)
-  const redirectUrl = req.query.finalRedirectUrl as string || "https://www.google.com";
-  console.log("redirectUrl: ",redirectUrl)
-  if (authorization_code &&  typeof authorization_code === 'string') {  
-    console.log("starting with exchangeAuthCode");
-    const accessToken = await exchangeAuthCode(authorization_code as string);
-    // Do the call to the RC backend here
-    // Then show something for a few seconds before redirecting
-    console.log('The resulting token: ', accessToken);
-    res.redirect(redirectUrl);
+  const code = req.query.code;
+  const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
 
+  if (code &&  typeof code === 'string') {  
+    const accessToken = await exchangeAuthCode(code as string);
+    console.log("accessToken: ", accessToken);
+    storedData["storedToken"] = accessToken?.token.access_token as string;
+    res.redirect(finalRedirectUrl);
   }    
   else {
-    throw new Error('Failed to retrieve access token 4');
+    throw new Error('Failed to retrieve access token');
   }
   
 });
+
+app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
+  console.log(req.body)
+  const applicantId = req.body.applicantId as string || "";
+  const operation = req.body.operation as string || "";
+  if(applId === applicantId && operation === "UPDATE"){
+    const storedToken = storedData["storedToken"];
+    const applicantData = getApplicantData(storedToken);
+    console.log(applicantData);
+  }
+  res.status(200).send('OK');
+}); 
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

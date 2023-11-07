@@ -36,8 +36,7 @@ export async function getAccessToken() {
   }
 }
 
-export async function exchangeAuthCode(authorization_code: string) {
-  console.log("I am in exchangeAuthCode");
+export async function exchangeAuthCode(code: string) {
   const config = {
     client: {
       id: process.env.CLIENT_ID as string,
@@ -51,13 +50,11 @@ export async function exchangeAuthCode(authorization_code: string) {
   
   const client = new AuthorizationCode(config);
   const tokenParams = {
-    code: authorization_code, 
+    code: code, 
     redirect_uri: 'http://localhost:4200/registration',
   };
   try {
-    console.log("Trying to get token 123");
     const accessToken = await client.getToken(tokenParams);
-    console.log('The resulting token: ', accessToken);
     return accessToken;
   } catch (error) {
     if (error instanceof Error) {
