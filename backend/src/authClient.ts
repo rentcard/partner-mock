@@ -31,7 +31,7 @@ export async function getAccessToken() {
       console.error('Access Token error:', error);
       }
     else {
-      throw new Error('Failed to retrieve access token 1');
+      throw new Error('Failed to retrieve access token');
     }
   }
 }
@@ -61,7 +61,7 @@ export async function exchangeAuthCode(code: string) {
       console.error('Access Token error:', error);
       }
     else {
-      throw new Error('Failed to retrieve access token 2');
+      throw new Error('Failed to exchange access token');
     }
   }
 }
