@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 function App() {
+  const [userData, setUserData] = useState('');
+  const [loading, setLoading] = useState(false);
+  const applicantId = "1234567";
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:3001/app/auth/rentcard/webhook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // If you need authorization or other headers, include them here
+      },
+      body: JSON.stringify({
+        applicantId: applicantId,
+        operation: "UPDATE",
+      }),
+    });
+    const data = await response.json();
+      setUserData(data);
+    } catch (error) {
+      console.error('There was an error fetching the data:', error);
+      setUserData('Failed to load data.'); // handle the error state
+    } finally {
+      setLoading(false);
+    }
+  };
   
-  const iframeSrc = `http://localhost:4200/jump?user=${encodeURIComponent(
+  const iframeSrc = `https://development.my.rentcard.app/jump?user=${encodeURIComponent(
     JSON.stringify({
       objectId: "2250344",
-      applicantId: "1234567",
+      applicantId: applicantId,
       rent: "1000",
       deposit: "3000",
       currency: "EUR",
@@ -16,7 +43,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>This is the partner website</h1>
+      <div><h1>This is the partner website</h1>
       <iframe
         className="bg-transparent"
         title="frame"
@@ -25,7 +52,19 @@ function App() {
         height="400px"
         src={iframeSrc}
         style={{ overflowY: "hidden", border: "none" }}
-      ></iframe>
+      ></iframe></div>
+      <div>
+        <h1>Get User data</h1>
+        <div>Click the link to see the simulated webhook response after completing the OAuth2 flow</div>
+        <a href="#!" onClick={fetchData}>{loading ? 'Loading...' : 'Get data'}</a>
+        {userData && Object.keys(userData).length > 0 && (
+          <div>
+            <h2>User Data:</h2>
+            <pre>{JSON.stringify(userData, null, 2)}</pre>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
