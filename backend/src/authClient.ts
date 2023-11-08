@@ -36,7 +36,7 @@ export async function getAccessToken() {
   }
 }
 
-export async function exchangeAuthCode(code: string) {
+export async function exchangeAuthCode(code: string, finalRedirectUrl: string) {
   const config = {
     client: {
       id: process.env.CLIENT_ID as string,
@@ -51,7 +51,7 @@ export async function exchangeAuthCode(code: string) {
   const client = new AuthorizationCode(config);
   const tokenParams = {
     code: code, 
-    redirect_uri: 'http://localhost:4200/registration',
+    redirect_uri: finalRedirectUrl,
   };
   try {
     const accessToken = await client.getToken(tokenParams);
