@@ -29,7 +29,7 @@ export async function createPreUser(accessToken: string): Promise<string> {
         'Content-Type': 'application/json',
       },
     });
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       throw new Error(response.data);
     }
     else if(response && response.data.preUserOneTimeToken) {

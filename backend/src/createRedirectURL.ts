@@ -5,20 +5,16 @@
  */
 
 export async function createRedirectURL(preUserOneTimeToken: string, user: string) {
-  // Construct the state parameter as a JSON string
   const state = encodeURIComponent(JSON.stringify({
-    "success_redirect_url": "customer-subdomain.somepartner.co/candidates/public/success-page",
-    "redirect-url": "app.somepartner.co/app/auth/rentcard/callback"
+    successRedirectUrl: "customer-subdomain.somepartner.co/candidates/public/success-page",
+    redirectUrl: "http://localhost:3001/app/auth/rentcard/callback", callbackUrl:"http://localhost:4200/"
   }));
 
-  // Construct the redirectUrl parameter
-  const redirectUrl = encodeURIComponent('development.my.othercompany.app/registration');
+  const redirectUrl = encodeURIComponent(`http://localhost:4200/registration?PreUserOneTimeToken=${preUserOneTimeToken}&user=${user}`);
 
-
-  // Construct the entire OAuth URL
-  const oauthUrl = `https://auth.development.rentcard.app/oauth2` +
-    `?requestType=exchange` +
-    `&redirectUrl=${redirectUrl}?PreUserOneTimeToken=${preUserOneTimeToken}&user=${user}` +
+  const oauthUrl = `https://auth.development.rentcard.app/api/v1/oauth2` +
+    `?grant_type=exchange` +
+    `&redirectUrl=${redirectUrl}` +
     `&state=${state}`;
 
   return oauthUrl;
