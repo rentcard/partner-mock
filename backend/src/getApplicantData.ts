@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export async function getApplicantData (storedToken: string) {
   try {
-    const response = await axios.get('https://api.development.rentcard.app/api/v1/users/my-info', {
+    const response = await axios.get('https://api.development.rentcard.app/api/v1/partners/scores/individual', {
       headers: {
         'Authorization': `Bearer ${storedToken}`
       }

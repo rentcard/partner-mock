@@ -61,6 +61,7 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   if (code && typeof code === 'string' && finalRedirectUrl && finalRedirectUrl !== "") {  
     const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
     storedData["storedToken"] = accessToken?.token.access_token as string;
+    console.log(storedData["storedToken"]);
     res.redirect(finalRedirectUrl);
   }    
   else {
@@ -74,8 +75,11 @@ app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
   if(applId === applicantId && operation === "UPDATE"){
     const applicantData = getApplicantData(storedData["storedToken"]);
     console.log(applicantData);
+    res.status(200).send(applicantData);
   }
-  res.status(200).send('OK');
+  else{
+    res.status(200).send("No applicant data found");
+  }
 }); 
 
 app.listen(port, () => {
