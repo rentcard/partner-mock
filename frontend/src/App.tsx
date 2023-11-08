@@ -3,17 +3,10 @@ import "./App.css";
 
 function App() {
   
-  function generateSevenDigitId() {
-    const min = 1000000;
-    const max = 9999999;
-    const number = Math.floor(Math.random() * (max - min + 1)) + min;
-    return number.toString();
-  }
-
   const iframeSrc = `http://localhost:4200/jump?user=${encodeURIComponent(
     JSON.stringify({
       objectId: "2250344",
-      applicantId: generateSevenDigitId(),
+      applicantId: "1234567",
       rent: "1000",
       deposit: "3000",
       currency: "EUR",
