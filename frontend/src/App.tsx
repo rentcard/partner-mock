@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
   const [userData, setUserData] = useState('');
   const [loading, setLoading] = useState(false);
   const applicantId = "1234567";
@@ -9,7 +10,7 @@ function App() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/app/auth/rentcard/webhook', {
+      const response = await fetch(`${apiBaseUrl}/app/auth/rentcard/webhook`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ function App() {
       currency: "EUR",
       partnerId: "85289368532",
     })
-  )}&auth=http://localhost:3001/app/auth/rentcard`;
+  )}&auth=${apiBaseUrl}/app/auth/rentcard`;
 
   return (
     <div className="App">
