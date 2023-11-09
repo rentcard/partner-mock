@@ -73,7 +73,7 @@ app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
   const applicantId = req.body.applicantId as string || "";
   const operation = req.body.operation as string || "";
   if(applId === applicantId && operation === "UPDATE"){
-    const applicantData = getApplicantData(storedData["storedToken"]);
+    const applicantData = await getApplicantData(storedData["storedToken"]);
     console.log(applicantData);
     res.status(200).send(applicantData);
   }
