@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { AxiosResponse } from 'axios';
 
 export async function createPreUser(accessToken: string): Promise<string> {
   
@@ -29,15 +28,16 @@ export async function createPreUser(accessToken: string): Promise<string> {
         'Content-Type': 'application/json',
       },
     });
+
     if (response.status !== 201) {
       throw new Error(response.data);
     }
-    else if(response && response.data.preUserOneTimeToken) {
-      return response.data.preUserOneTimeToken as string;
-    }
-    else {
+
+    if(!response || !response.data?.preUserOneTimeToken) {
       throw new Error('Failed to retrieve preUserOneTimeToken');
     }
+
+    return response.data.preUserOneTimeToken as string;
   } catch (error:any) {
     // You may want to handle errors differently or throw them to be handled by the caller
     throw new Error(error.response ? error.response.data : error.message);
