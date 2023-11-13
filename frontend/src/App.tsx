@@ -31,7 +31,7 @@ function App() {
     }
   };
   
-  const iframeSrc = `https://development.my.rentcard.app/jump?user=${encodeURIComponent(
+  const iframeSrc = `http://localhost:4200/jump?user=${encodeURIComponent(
     JSON.stringify({
       objectId: "2250344",
       applicantId: applicantId,
