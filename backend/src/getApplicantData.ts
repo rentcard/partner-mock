@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function getApplicantData (storedToken: string) {
+export async function getApplicantData (storedToken: string): Promise<any> {
   try {
     const response = await axios.get('https://api.development.rentcard.app/api/v1/partners/scores/individual', {
       headers: {
@@ -10,7 +10,7 @@ export async function getApplicantData (storedToken: string) {
     return response.data;
   } catch (error) {
     if (error instanceof Error) {
-    console.error('Error fetching scores:', error.message);
+      console.error('Error fetching scores:', error.message);
     }
   }
 };
