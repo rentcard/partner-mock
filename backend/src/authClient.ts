@@ -16,8 +16,8 @@ interface OAuthConfig {
   };
 }
 
-// Shared configuration for OAuth clients
-const sharedConfig: OAuthConfig = {
+// lazy initializing the Shared configuration
+const getSharedConfig = (): OAuthConfig => ({
   client: {
     id: process.env.CLIENT_ID as string,
     secret: process.env.CLIENT_SECRET as string,
@@ -26,9 +26,16 @@ const sharedConfig: OAuthConfig = {
     tokenHost: 'https://auth.development.rentcard.app',
     tokenPath: '/api/v1/oauth2',
   },
-};
+});
+
+// Shared configuration for OAuth clients
+let sharedConfig: OAuthConfig | null = null;
 
 export async function getAccessToken(): Promise<Token> {
+  if (!sharedConfig) {
+    sharedConfig = getSharedConfig();
+  }
+
   const config = {
     ...sharedConfig,
     options: {
@@ -46,18 +53,11 @@ export async function getAccessToken(): Promise<Token> {
 }
 
 export async function exchangeAuthCode(code: string, finalRedirectUrl: string): Promise<AccessToken> {
-  const config = {
-    client: {
-      id: process.env.CLIENT_ID as string,
-      secret: process.env.CLIENT_SECRET as string
-    },
-    auth: {
-      tokenHost: 'https://auth.development.rentcard.app',
-      tokenPath: '/api/v1/oauth2'
-    },
-  };
+  if (!sharedConfig) {
+    sharedConfig = getSharedConfig();
+  }
   
-  const client = new AuthorizationCode(config);
+  const client = new AuthorizationCode(sharedConfig);
   const tokenParams = {
     code: code, 
     redirect_uri: finalRedirectUrl,
