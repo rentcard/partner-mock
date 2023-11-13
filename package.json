@@ -5,17 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm:start --prefix frontend\" \"npm:start --prefix backend\"",
-    "install": "npm install --prefix frontend && npm install --prefix backend"
+    "frontend": "cd ./frontend && npm install",
+    "backend": "cd ./backend && npm install",
+    "install": "npm run frontend && npm run backend"
   },
   "keywords": [],
   "author": "Martin Diessner",
   "license": "ISC",
-  "devDependencies": {
-    "@types/simple-oauth2": "^5.0.6",
+  "devDependencies": { 
     "concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "css-select": "^5.1.0",
-    "svgo": "^3.0.2"
   }
 }

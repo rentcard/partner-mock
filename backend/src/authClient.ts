@@ -1,51 +1,42 @@
 // authClient.ts
-import { AccessToken, AuthorizationCode, ClientCredentials, Token } from 'simple-oauth2';
+import { AuthorizationCode, ClientCredentials, Token } from 'simple-oauth2';
 
 interface AccessTokenResponse {
   accessToken: Token;
 }
 
-interface OAuthConfig {
-  client: {
-    id: string;
-    secret: string;
-  };
-  auth: {
-    tokenHost: string;
-    tokenPath: string;
-  };
-}
 
-// Shared configuration for OAuth clients
-const sharedConfig: OAuthConfig = {
-  client: {
-    id: process.env.CLIENT_ID as string,
-    secret: process.env.CLIENT_SECRET as string,
-  },
-  auth: {
-    tokenHost: 'https://auth.development.rentcard.app',
-    tokenPath: '/api/v1/oauth2',
-  },
-};
 
-export async function getAccessToken(): Promise<Token> {
+export async function getAccessToken() {
   const config = {
-    ...sharedConfig,
-    options: {
-      authorizationMethod: "body" as "body",
+    client: {
+      id: process.env.CLIENT_ID as string,
+      secret: process.env.CLIENT_SECRET as string
     },
+    auth: {
+      tokenHost: 'https://auth.development.rentcard.app',
+      tokenPath: '/api/v1/oauth2'
+    },
+    options: {
+      authorizationMethod: "body" as "body"
+    }
   };
   const client = new ClientCredentials(config);
 
   try {
-    const accessToken = await client.getToken({});
+    const accessToken = await client.getToken({ });
     return accessToken.token;
   } catch (error: unknown) {
-    handleError(error, 'Failed to retrieve access token');
+    if (error instanceof Error) {
+      console.error('Access Token error:', error);
+      }
+    else {
+      throw new Error('Failed to retrieve access token');
+    }
   }
 }
 
-export async function exchangeAuthCode(code: string, finalRedirectUrl: string): Promise<AccessToken> {
+export async function exchangeAuthCode(code: string, finalRedirectUrl: string) {
   const config = {
     client: {
       id: process.env.CLIENT_ID as string,
@@ -66,13 +57,11 @@ export async function exchangeAuthCode(code: string, finalRedirectUrl: string): 
     const accessToken = await client.getToken(tokenParams);
     return accessToken;
   } catch (error) {
-    handleError(error, 'Failed to exchange access token');
+    if (error instanceof Error) {
+      console.error('Access Token error:', error);
+      }
+    else {
+      throw new Error('Failed to exchange access token');
+    }
   }
-}
-
-function handleError(error: unknown, defaultMessage: string): never {
-  if (error instanceof Error) {
-    console.error('Error:', error.message);
-  }
-  throw new Error(defaultMessage);
 }
