@@ -38,7 +38,7 @@ function App() {
       rent: "1000",
       deposit: "3000",
       currency: "EUR",
-      partnerId: "85289368532",
+      partnerId: "85289368532", //FIXME: Replace with the partnerId provided by RentCard
     })
   )}&auth=${apiBaseUrl}/app/auth/rentcard`;
 
