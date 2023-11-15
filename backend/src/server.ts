@@ -30,23 +30,22 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     const accessToken = await getAccessToken();
     var preUserOneTimeToken = "";
 
-    // Step 2: POST preUser using the accessToken
-    if (accessToken && accessToken.access_token && typeof accessToken.access_token === 'string') {
-      preUserOneTimeToken = await createPreUser(accessToken.access_token);
-    }    
-    else {
+    if (!accessToken || !accessToken.access_token || typeof accessToken.access_token !== 'string') {
       throw new Error('Failed to retrieve access token');
-    }
+    }    
+    
+    // Step 2: POST preUser using the accessToken
+    preUserOneTimeToken = await createPreUser(accessToken.access_token);
 
-    // Step 3: Redirect user back to rentcard
-    if (preUserOneTimeToken){
-      const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
-      console.log(redirectUrl);
-      res.redirect(redirectUrl);
-    }
-    else {
+    if (!preUserOneTimeToken){
       res.status(400).send('Some error occured, please go back to the previous page.');
     }
+    
+    // Step 3: Redirect user back to rentcard
+    const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
+    console.log(redirectUrl);
+    res.redirect(redirectUrl);
+
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: 'Internal Server Error', error: error.message });
@@ -58,28 +57,27 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   const code = req.query.code;
   const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
 
-  if (code && typeof code === 'string' && finalRedirectUrl && finalRedirectUrl !== "") {  
-    const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
-    storedData["storedToken"] = accessToken?.token.access_token as string;
-    console.log(storedData["storedToken"]);
-    res.redirect(finalRedirectUrl);
-  }    
-  else {
+  if (!code || typeof code !== 'string' || !finalRedirectUrl || finalRedirectUrl === "") {  
     throw new Error('Failed to retrieve access token');
   }
+
+  const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
+  storedData["storedToken"] = accessToken?.token.access_token as string;
+  console.log(storedData["storedToken"]);
+  res.redirect(finalRedirectUrl);
 });
 
 app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
   const applicantId = req.body.applicantId as string || "";
   const operation = req.body.operation as string || "";
-  if(applId === applicantId && operation === "UPDATE"){
-    const applicantData = await getApplicantData(storedData["storedToken"]);
-    console.log(applicantData);
-    res.status(200).send(applicantData);
-  }
-  else{
+  
+  if(applId !== applicantId || operation !== "UPDATE"){
     res.status(200).send("No applicant data found");
   }
+
+  const applicantData = await getApplicantData(storedData["storedToken"]);
+  console.log(applicantData);
+  res.status(200).send(applicantData);
 }); 
 
 app.listen(port, () => {

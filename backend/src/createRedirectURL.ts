@@ -11,9 +11,9 @@ export async function createRedirectURL(preUserOneTimeToken: string, user: strin
   const finalRedirectUrl = encodeURIComponent(`${feUrl}/registration?user=${user}`);
   const state = encodeURIComponent(JSON.stringify({
     successRedirectUrl: `${apiBaseUrl}/`,
-    redirectUrl: `${apiBaseUrl}/app/auth/rentcard/callback`, finalRedirectUrl: finalRedirectUrl
+    redirectUrl: `${apiBaseUrl}/app/auth/rentcard/callback`, 
+    finalRedirectUrl: finalRedirectUrl
   }));
-
 
   const oauthUrl = `https://auth.development.rentcard.app/api/v1/oauth2` +
     `?grant_type=exchange` +
