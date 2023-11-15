@@ -30,7 +30,7 @@ export async function createPreUser(accessToken: string): Promise<string> {
     });
 
     if (response.status !== 201) {
-      throw new Error(response.data);
+      throw new Error(response.data.message);
     }
 
     if(!response || !response.data?.preUserOneTimeToken) {

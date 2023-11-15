@@ -33,18 +33,20 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     if (!accessToken || !accessToken.access_token || typeof accessToken.access_token !== 'string') {
       throw new Error('Failed to retrieve access token');
     }    
-    
     // Step 2: POST preUser using the accessToken
     preUserOneTimeToken = await createPreUser(accessToken.access_token);
 
     if (!preUserOneTimeToken){
       res.status(400).send('Some error occured, please go back to the previous page.');
     }
+
     
     // Step 3: Redirect user back to rentcard
     const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
     console.log(redirectUrl);
-    res.redirect(redirectUrl);
+    res.setHeader("Authorization", `Bearer ${accessToken.access_token}`);
+    res.writeHead(308, { Location: redirectUrl });
+    res.end();
 
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -56,6 +58,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   const code = req.query.code;
   const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
+  console.log(req.query);
 
   if (!code || typeof code !== 'string' || !finalRedirectUrl || finalRedirectUrl === "") {  
     throw new Error('Failed to retrieve access token');
