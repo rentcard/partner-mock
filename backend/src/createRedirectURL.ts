@@ -6,8 +6,9 @@
 
 export async function createRedirectURL(preUserOneTimeToken: string, user: string) {
   const apiBaseUrl = process.env.API_BASE_URL;
-  const redirectUrl = encodeURIComponent(`http://localhost:4200/registration?preUserOneTimeToken=${preUserOneTimeToken}&user=${user}`);
-  const finalRedirectUrl = encodeURIComponent(`http://localhost:4200/registration?user=${user}`);
+  const feUrl = process.env.FE_URL;
+  const redirectUrl = encodeURIComponent(`${feUrl}/registration?preUserOneTimeToken=${preUserOneTimeToken}&user=${user}`);
+  const finalRedirectUrl = encodeURIComponent(`${feUrl}/registration?user=${user}`);
   const state = encodeURIComponent(JSON.stringify({
     successRedirectUrl: `${apiBaseUrl}/`,
     redirectUrl: `${apiBaseUrl}/app/auth/rentcard/callback`, finalRedirectUrl: finalRedirectUrl

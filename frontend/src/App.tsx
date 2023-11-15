@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+  const feUrl = process.env.REACT_APP_FE_URL;
   const [userData, setUserData] = useState('');
   const [loading, setLoading] = useState(false);
   const applicantId = "1234567";
@@ -31,7 +32,7 @@ function App() {
     }
   };
   
-  const iframeSrc = `https://development.my.rentcard.app/jump?user=${encodeURIComponent(
+  const iframeSrc = `${feUrl}/jump?user=${encodeURIComponent(
     JSON.stringify({
       objectId: "2250344",
       applicantId: applicantId,
