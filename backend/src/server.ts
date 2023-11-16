@@ -33,17 +33,16 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     if (!accessToken || !accessToken.access_token || typeof accessToken.access_token !== 'string') {
       throw new Error('Failed to retrieve access token');
     }    
-    
     // Step 2: POST preUser using the accessToken
     preUserOneTimeToken = await createPreUser(accessToken.access_token);
 
     if (!preUserOneTimeToken){
       res.status(400).send('Some error occured, please go back to the previous page.');
     }
+
     
     // Step 3: Redirect user back to rentcard
     const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
-    console.log(redirectUrl);
     res.redirect(redirectUrl);
 
   } catch (error: unknown) {
@@ -56,15 +55,22 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   const code = req.query.code;
   const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
+  const successRedirectUrl = req.query.successRedirectUrl as string || "";
 
   if (!code || typeof code !== 'string' || !finalRedirectUrl || finalRedirectUrl === "") {  
     throw new Error('Failed to retrieve access token');
   }
 
+  const finalUrl = new URL(finalRedirectUrl);
+
+  // Append the successRedirectUrl as a query parameter
+  if (successRedirectUrl) {
+    finalUrl.searchParams.append('successRedirectUrl', successRedirectUrl);
+  }
+
   const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
   storedData["storedToken"] = accessToken?.token.access_token as string;
-  console.log(storedData["storedToken"]);
-  res.redirect(finalRedirectUrl);
+  res.redirect(finalUrl.toString());
 });
 
 app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
