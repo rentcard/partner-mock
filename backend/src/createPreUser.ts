@@ -16,7 +16,7 @@ export async function createPreUser(accessToken: string): Promise<string> {
       "adults": 2,
       "kids": 3
     },
-    "email": "test@mdiessner.com"
+    "email": "test@testdomain.com"
   };
 
   const url = 'https://api.development.rentcard.app/api/v1/partners/preuser';

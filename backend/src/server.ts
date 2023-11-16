@@ -43,10 +43,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     
     // Step 3: Redirect user back to rentcard
     const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
-    console.log(redirectUrl);
-    res.setHeader("Authorization", `Bearer ${accessToken.access_token}`);
-    res.writeHead(308, { Location: redirectUrl });
-    res.end();
+    res.redirect(redirectUrl);
 
   } catch (error: unknown) {
     if (error instanceof Error) {
