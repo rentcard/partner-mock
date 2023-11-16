@@ -58,16 +58,22 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   const code = req.query.code;
   const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
-  console.log(req.query);
+  const successRedirectUrl = req.query.successRedirectUrl as string || "";
 
   if (!code || typeof code !== 'string' || !finalRedirectUrl || finalRedirectUrl === "") {  
     throw new Error('Failed to retrieve access token');
   }
 
+  const finalUrl = new URL(finalRedirectUrl);
+
+  // Append the successRedirectUrl as a query parameter
+  if (successRedirectUrl) {
+    finalUrl.searchParams.append('successRedirectUrl', successRedirectUrl);
+  }
+
   const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
   storedData["storedToken"] = accessToken?.token.access_token as string;
-  console.log(storedData["storedToken"]);
-  res.redirect(finalRedirectUrl);
+  res.redirect(finalUrl.toString());
 });
 
 app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
