@@ -36,7 +36,6 @@ export async function createPreUser(accessToken: string): Promise<string> {
     if(!response || !response.data?.preUserOneTimeToken) {
       throw new Error('Failed to retrieve preUserOneTimeToken');
     }
-
     return response.data.preUserOneTimeToken as string;
   } catch (error:any) {
     // You may want to handle errors differently or throw them to be handled by the caller

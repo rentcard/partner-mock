@@ -41,7 +41,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     }
 
     
-    // Step 3: Redirect user back to rentcard
+    // Step 3: Initialize authorization code flow by redirecting user to rentcard
     const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
     res.redirect(redirectUrl);
 
@@ -82,7 +82,6 @@ app.post('/app/auth/rentcard/webhook', async (req: Request, res: Response) => {
   }
 
   const applicantData = await getApplicantData(storedData["storedToken"]);
-  console.log(applicantData);
   res.status(200).send(applicantData);
 }); 
 

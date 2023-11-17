@@ -6,18 +6,20 @@
 
 export async function createRedirectURL(preUserOneTimeToken: string, user: string) {
   const apiBaseUrl = process.env.API_BASE_URL;
-  const feUrl = process.env.FE_URL;
-  const redirectUrl = encodeURIComponent(`${feUrl}/registration?preUserOneTimeToken=${preUserOneTimeToken}&user=${user}`);
-  const finalRedirectUrl = encodeURIComponent(`${feUrl}/registration?user=${user}`);
-  const state = encodeURIComponent(JSON.stringify({
+  const redirect_uri = encodeURIComponent(`${apiBaseUrl}/app/auth/rentcard/callback`);
+  const state = (JSON.stringify({
     successRedirectUrl: `${apiBaseUrl}/`,
-    redirectUrl: `${apiBaseUrl}/app/auth/rentcard/callback`, 
-    finalRedirectUrl: finalRedirectUrl
+    redirectData:{
+      preUserOneTimeToken: preUserOneTimeToken,
+      user: '{"objectId":"12345","applicantId":"1","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',      
+      successRedirectUrl: `${apiBaseUrl}/`
+    } 
   }));
 
   const oauthUrl = `https://auth.development.rentcard.app/api/v1/oauth2` +
-    `?grant_type=exchange` +
-    `&redirectUrl=${redirectUrl}` +
+    `?response_type=code` +
+    `&redirect_uri=${redirect_uri}` +
+    `&client_id=${process.env.CLIENT_ID}`+
     `&state=${state}`;
 
   return oauthUrl;
