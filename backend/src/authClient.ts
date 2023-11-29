@@ -48,7 +48,7 @@ export async function getAccessToken(): Promise<Token> {
     const accessToken = await client.getToken({});
     return accessToken.token;
   } catch (error: unknown) {
-    handleError(error, 'Failed to retrieve access token');
+    handleError(error, 'Failed to retrieve access token 1');
   }
 }
 
