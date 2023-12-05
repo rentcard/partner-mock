@@ -9,9 +9,10 @@ export async function createRedirectURL(preUserOneTimeToken: string, user: strin
   const redirect_uri = encodeURIComponent(`${apiBaseUrl}/app/auth/rentcard/callback`);
   const state = (JSON.stringify({
     successRedirectUrl: `${apiBaseUrl}/`,
+    applicantId: "1234567",
     redirectData:{
       preUserOneTimeToken: preUserOneTimeToken,
-      user: '{"objectId":"12345","applicantId":"1","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',      
+      user: '{"objectId":"12345","applicantId":"1234567","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',      
       successRedirectUrl: `${apiBaseUrl}/`
     } 
   }));
