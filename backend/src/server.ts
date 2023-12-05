@@ -69,7 +69,6 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
 
   const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
   storedData["storedToken"] = accessToken?.token.access_token as string;
-  console.log("Token: ", storedData["storedToken"])
   res.redirect(finalUrl.toString());
 });
 
