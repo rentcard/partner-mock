@@ -39,7 +39,6 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
     if (!preUserOneTimeToken){
       res.status(400).send('Some error occured, please go back to the previous page.');
     }
-
     
     // Step 3: Initialize authorization code flow by redirecting user to rentcard
     const redirectUrl = await createRedirectURL(preUserOneTimeToken, user);
@@ -70,6 +69,7 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
 
   const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
   storedData["storedToken"] = accessToken?.token.access_token as string;
+  console.log("Token: ", storedData["storedToken"])
   res.redirect(finalUrl.toString());
 });
 
