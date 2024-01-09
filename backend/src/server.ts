@@ -53,6 +53,7 @@ app.get('/app/auth/rentcard', async (req: Request, res: Response) => {
 
 app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   const code = req.query.code;
+  const applicantId = req.query.applicantId as string || "";
   const finalRedirectUrl = req.query.finalRedirectUrl as string || "";
   const successRedirectUrl = req.query.successRedirectUrl as string || "";
 
@@ -66,8 +67,10 @@ app.get('/app/auth/rentcard/callback', async (req: Request, res: Response) => {
   if (successRedirectUrl) {
     finalUrl.searchParams.append('successRedirectUrl', successRedirectUrl);
   }
-
-  const accessToken = await exchangeAuthCode(code as string, finalRedirectUrl as string);
+  const redirect_uri = encodeURIComponent(`${process.env.API_BASE_URL}/app/auth/rentcard/callback`);
+  const accessToken = await exchangeAuthCode(code as string, redirect_uri as string);
+  storedData["applicantId"] = applicantId;
+  console.log("applicantId:", applicantId);
   storedData["storedToken"] = accessToken?.token.access_token as string;
   res.redirect(finalUrl.toString());
 });

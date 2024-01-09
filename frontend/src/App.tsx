@@ -15,7 +15,6 @@ function App() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // If you need authorization or other headers, include them here
       },
       body: JSON.stringify({
         applicantId: applicantId,
@@ -26,7 +25,7 @@ function App() {
       setUserData(data);
     } catch (error) {
       console.error('There was an error fetching the data:', error);
-      setUserData('Failed to load data.'); // handle the error state
+      setUserData('Failed to load data.'); 
     } finally {
       setLoading(false);
     }
@@ -34,12 +33,12 @@ function App() {
   
   const iframeSrc = `${feUrl}/jump?user=${encodeURIComponent(
     JSON.stringify({
-      objectId: "2250344",
+      objectId: "2250346",
       applicantId: applicantId,
       rent: "1000",
       deposit: "3000",
       currency: "EUR",
-      partnerId: "85289368532", //FIXME: Replace with the partnerId provided by RentCard
+      partnerId: "85289368532", //FIXME: Replace with the partnerId provided by rentcard
     })
   )}&auth=${apiBaseUrl}/app/auth/rentcard`;
 
