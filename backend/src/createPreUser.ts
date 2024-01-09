@@ -9,7 +9,7 @@ export async function createPreUser(accessToken: string): Promise<string> {
       "phoneNumber": "+491234567890"
     },
     "employment": {
-      "type": "Employee",
+      "type": "homeworker",
       "netIncome": 3200
     },
     "rental": {
@@ -19,7 +19,7 @@ export async function createPreUser(accessToken: string): Promise<string> {
     "email": "test@testdomain.com"
   };
 
-  const url = 'https://api.development.rentcard.app/api/v1/partners/preuser';
+  const url = `${process.env.API_URL}/api/v1/partners/preuser`;
 
   try {
     const response = await axios.post(url, postData, {
@@ -38,7 +38,6 @@ export async function createPreUser(accessToken: string): Promise<string> {
     }
     return response.data.preUserOneTimeToken as string;
   } catch (error:any) {
-    // You may want to handle errors differently or throw them to be handled by the caller
     throw new Error(error.response ? error.response.data : error.message);
   }
 }

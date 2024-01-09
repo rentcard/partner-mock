@@ -23,7 +23,7 @@ const getSharedConfig = (): OAuthConfig => ({
     secret: process.env.CLIENT_SECRET as string,
   },
   auth: {
-    tokenHost: 'https://auth.development.rentcard.app',
+    tokenHost: process.env.AUTH_URL as string,
     tokenPath: '/api/v1/oauth2',
   },
 });
@@ -52,18 +52,19 @@ export async function getAccessToken(): Promise<Token> {
   }
 }
 
-export async function exchangeAuthCode(code: string, finalRedirectUrl: string): Promise<AccessToken> {
+export async function exchangeAuthCode(code: string, redirect_uri: string): Promise<AccessToken> {
   if (!sharedConfig) {
     sharedConfig = getSharedConfig();
   }
   
   const client = new AuthorizationCode(sharedConfig);
   const tokenParams = {
-    code: code, 
-    redirect_uri: finalRedirectUrl,
+    code, 
+    redirect_uri,
   };
   try {
     const accessToken = await client.getToken(tokenParams);
+    console.log("accessToken: ", accessToken);
     return accessToken;
   } catch (error) {
     handleError(error, 'Failed to exchange access token');

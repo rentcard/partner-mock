@@ -12,12 +12,11 @@ export async function createRedirectURL(preUserOneTimeToken: string, user: strin
     applicantId: "1234567",
     redirectData:{
       preUserOneTimeToken: preUserOneTimeToken,
-      user: '{"objectId":"12345","applicantId":"1234567","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',      
-      successRedirectUrl: `${apiBaseUrl}/`
+      user: '{"objectId":"2250345","applicantId":"1234567","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',      
     } 
   }));
 
-  const oauthUrl = `https://auth.development.rentcard.app/api/v1/oauth2` +
+  const oauthUrl = `${process.env.AUTH_URL}/api/v1/oauth2`+
     `?response_type=code` +
     `&redirect_uri=${redirect_uri}` +
     `&client_id=${process.env.CLIENT_ID}`+
