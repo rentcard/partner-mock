@@ -1,6 +1,10 @@
 // authClient.ts
 import { AccessToken, AuthorizationCode, ClientCredentials, Token } from 'simple-oauth2';
 
+require('dotenv').config();
+require('dotenv').config({ path: '.env.local' });
+
+
 interface AccessTokenResponse {
   accessToken: Token;
 }

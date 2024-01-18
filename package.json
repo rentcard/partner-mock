@@ -12,7 +12,10 @@
   "keywords": [],
   "author": "Martin Diessner",
   "license": "ISC",
-  "devDependencies": { 
+  "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
   }
 }
