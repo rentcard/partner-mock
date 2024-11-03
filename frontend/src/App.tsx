@@ -31,7 +31,7 @@ function App() {
     }
   };
 
-  const iframeSrc = `${feUrl}/jump?user=${encodeURIComponent(
+  const redirectUrl = `${apiBaseUrl}/app/auth/rentcard?user=${encodeURIComponent(
     JSON.stringify({
       objectId: "22504346",
       applicantId: applicantId,
@@ -40,21 +40,14 @@ function App() {
       currency: "EUR",
       partnerId: "85289368532", //FIXME: Replace with the partnerId provided by rentcard
     })
-  )}&auth=${apiBaseUrl}/app/auth/rentcard`;
+  )}`;
 
   return (
     <div className="App">
-      <div>
+      <div style={{ backgroundColor: "lightblue", padding: "2rem" }}>
         <h1>This is what the user sees</h1>
-        <iframe
-          className="bg-transparent"
-          title="frame"
-          id="ifrm"
-          width="100%"
-          height="800px"
-          src={iframeSrc}
-          style={{ overflowY: "hidden", border: "none" }}
-        ></iframe>
+        <h2>Click link to start process</h2>
+        <a href={redirectUrl}>Start process</a>
       </div>
       <div>
         <h1>Here is the partner view</h1>
