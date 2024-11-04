@@ -38,7 +38,7 @@ function App() {
       rent: "1000",
       deposit: "3000",
       currency: "EUR",
-      partnerId: "85289368532", //FIXME: Replace with the partnerId provided by rentcard
+      partnerId: "71898238096", //FIXME: Replace with the partnerId provided by rentcard
     })
   )}`;
 

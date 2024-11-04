@@ -13,11 +13,11 @@ export async function createRedirectURL(
     `${apiBaseUrl}/app/auth/rentcard/callback`
   );
   const state = JSON.stringify({
-    successRedirectUrl: `https://rentcard.me/`,
+    successRedirectUrl: `http://localhost:4000/`,
     applicantId: "1234567",
     redirectData: {
       preUserOneTimeToken: preUserOneTimeToken,
-      user: '{"objectId":"2250345","applicantId":"1234567","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"85289368532"}',
+      user: '{"objectId":"2250345","applicantId":"1234567","rent":"1000","deposit":"3000","currency":"EUR","callbackURL":"www.rentcard.com","partnerId":"71898238096"}',
     },
   });
 
