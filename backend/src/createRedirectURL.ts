@@ -13,7 +13,7 @@ export async function createRedirectURL(
     `${apiBaseUrl}/app/auth/rentcard/callback`
   );
   const state = JSON.stringify({
-    successRedirectUrl: `https://rentcard.me/`,
+    successRedirectUrl: `http://localhost:4000`,
     applicantId: "1234567",
     redirectData: {
       preUserOneTimeToken: preUserOneTimeToken,
